@@ -40,6 +40,7 @@ d_class = labelEncoder.fit_transform(d_class)
 standardScaler = StandardScaler()
 previsors = standardScaler.fit_transform(previsors)
 
+#creating test and training database
 previsorsTest, previsorsTraining,classTest,classTraining = train_test_split(previsors, d_class, test_size=0.15, random_state=0)
 
 
