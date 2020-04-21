@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import confusion_matrix, accuracy_score
 
@@ -20,6 +21,22 @@ previsors[:,8] = labelEncoder.fit_transform(previsors[:,8])
 previsors[:,9] = labelEncoder.fit_transform(previsors[:,9])
 previsors[:,13] = labelEncoder.fit_transform(previsors[:,13])
 
-oneHotEncoder = ColumnTransformer(transformers=[("OneHot", OneHotEncoder(),[1,2,5,6,7,8,9,13])], remainder="passthrough")
+oneHotEncoder = ColumnTransformer(transformers=[("OneHot", OneHotEncoder(), [1,3,5,6,7,8,9,13])], remainder='passthrough')
 previsors = oneHotEncoder.fit_transform(previsors).toarray()
 
+standardScaler = StandardScaler()
+#102,103,104,105,106,107
+previsors = standardScaler.fit_transform(previsors)
+
+#separe base in training and test
+previsorsTraining, previsorsTest, classTraining, classTest = train_test_split(previsors, classe, test_size=0.15, random_state=0)
+
+
+#naive bayes
+classifier = GaussianNB()
+classifier.fit(previsorsTraining, classTraining)
+result = classifier.predict(previsorsTest)
+
+#metrics
+precision = accuracy_score(classTest, result)
+matrix = confusion_matrix(classTest, result)
